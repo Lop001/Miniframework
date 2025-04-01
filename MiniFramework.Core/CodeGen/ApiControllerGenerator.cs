@@ -51,15 +51,15 @@ public static class ApiControllerGenerator
         sb.AppendLine("        }");
         sb.AppendLine();
 
-        var getAllAuth = GetAuthorizeLine(meta, CrudAction.GetAll);
-        if (getAllAuth != null) sb.AppendLine($"        {getAllAuth}");
+        foreach (var line in GetAuthorizeLines(meta, CrudAction.GetAll))
+            sb.AppendLine($"        {line}");
 
         sb.AppendLine("        [HttpGet]");
         sb.AppendLine($"        public async Task<IEnumerable<{entityName}>> GetAll() => await _repository.GetAllAsync();");
         sb.AppendLine();
 
-        var getByIdAuth = GetAuthorizeLine(meta, CrudAction.GetById);
-        if (getByIdAuth != null) sb.AppendLine($"        {getByIdAuth}");
+        foreach (var line in GetAuthorizeLines(meta, CrudAction.GetById))
+            sb.AppendLine($"        {line}");
 
         sb.AppendLine("        [HttpGet(\"{id}\")]");
         sb.AppendLine($"        public async Task<ActionResult<{entityName}>> Get(int id)");
@@ -69,8 +69,8 @@ public static class ApiControllerGenerator
         sb.AppendLine("        }");
         sb.AppendLine();
 
-        var createAuth = GetAuthorizeLine(meta, CrudAction.Create);
-        if (createAuth != null) sb.AppendLine($"        {createAuth}");
+        foreach (var line in GetAuthorizeLines(meta, CrudAction.Create))
+            sb.AppendLine($"        {line}");
 
         sb.AppendLine("        [HttpPost]");
         sb.AppendLine($"        public async Task<IActionResult> Create({entityName} entity)");
@@ -80,8 +80,8 @@ public static class ApiControllerGenerator
         sb.AppendLine("        }");
         sb.AppendLine();
 
-        var updateAuth = GetAuthorizeLine(meta, CrudAction.Update);
-        if (updateAuth != null) sb.AppendLine($"        {updateAuth}");
+        foreach (var line in GetAuthorizeLines(meta, CrudAction.Update))
+            sb.AppendLine($"        {line}");
 
         sb.AppendLine("        [HttpPut(\"{id}\")]");
         sb.AppendLine($"        public async Task<IActionResult> Update(int id, {entityName} entity)");
@@ -92,8 +92,8 @@ public static class ApiControllerGenerator
         sb.AppendLine("        }");
         sb.AppendLine();
 
-        var deleteAuth = GetAuthorizeLine(meta, CrudAction.Delete);
-        if (deleteAuth != null) sb.AppendLine($"        {deleteAuth}");
+        foreach (var line in GetAuthorizeLines(meta, CrudAction.Delete))
+            sb.AppendLine($"        {line}");
 
         sb.AppendLine("        [HttpDelete(\"{id}\")]");
         sb.AppendLine("        public async Task<IActionResult> Delete(int id)");
@@ -108,18 +108,28 @@ public static class ApiControllerGenerator
         return sb.ToString();
     }
 
-    private static string? GetAuthorizeLine(EntityMetadata meta, CrudAction action)
+    private static List<string> GetAuthorizeLines(EntityMetadata meta, CrudAction action)
     {
-        var auth = meta.ActionAuthorizations.FirstOrDefault(a => a.Action == action);
-        if (auth == null) return null;
+        var auths = meta.ActionAuthorizations.Where(a => a.Action == action).ToList();
+        var lines = new List<string>();
 
-        if (!string.IsNullOrWhiteSpace(auth.Policy))
-            return $"[Authorize(Policy = \"{auth.Policy}\")]";
+        foreach (var auth in auths)
+        {
+            if (!string.IsNullOrWhiteSpace(auth.Policy))
+            {
+                lines.Add($"[Authorize(Policy = \"{auth.Policy}\")]");
+            }
+            else if (auth.Roles.Count() > 0)
+            {
+                var roles = string.Join(",", auth.Roles);
+                lines.Add($"[Authorize(Roles = \"{roles}\")]");
+            }
+            else
+            {
+                lines.Add("[Authorize]");
+            }
+        }
 
-        if (auth.Roles.Length == 0)
-            return "[Authorize]";
-
-        var rolesJoined = string.Join(",", auth.Roles);
-        return $"[Authorize(Roles = \"{rolesJoined}\")]";
+        return lines;
     }
 }

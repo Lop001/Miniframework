@@ -6,6 +6,7 @@ namespace MiniFramework.TestApp;
 [Repository(generate: true, RegisterService = true, Lifetime = ServiceLifetimeOption.Transient)]
 [AuthorizeAction(CrudAction.Create, "Admin", "Editor")]
 [AuthorizeAction(CrudAction.Delete, "Admin")]
+[AuthorizeAction(CrudAction.Delete, Policy = "CanDeleteOwn")]
 [AuthorizeAction(CrudAction.GetAll)] // jen přihlášení
 public class Order
 {
