@@ -4,8 +4,8 @@ using MiniFramework.Core;
 namespace MiniFramework.TestApp;
 [Entity(displayName: "Objednávka", tableName: "Orders")]
 [Repository(generate: true, RegisterService = true, Lifetime = ServiceLifetimeOption.Transient)]
-[AuthorizeAction(CrudAction.Create, role: "Editor")]
-[AuthorizeAction(CrudAction.Delete, role: "Admin")]
+[AuthorizeAction(CrudAction.Create, "Admin", "Editor")]
+[AuthorizeAction(CrudAction.Delete, "Admin")]
 [AuthorizeAction(CrudAction.GetAll)] // jen přihlášení
 public class Order
 {

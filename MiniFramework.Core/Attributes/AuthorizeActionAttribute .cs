@@ -13,13 +13,19 @@ public enum CrudAction
 public class AuthorizeActionAttribute : Attribute
 {
     public CrudAction Action { get; }
-    public string? Role { get; }
+    public string[] Roles { get; }
     public string? Policy { get; }
 
-    public AuthorizeActionAttribute(CrudAction action, string? role = null, string? policy = null)
+    public AuthorizeActionAttribute(CrudAction action, params string[] roles)
     {
         Action = action;
-        Role = role;
+        Roles = roles;
+    }
+
+    public AuthorizeActionAttribute(CrudAction action, string policy)
+    {
+        Action = action;
+        Roles = Array.Empty<string>();
         Policy = policy;
     }
 }

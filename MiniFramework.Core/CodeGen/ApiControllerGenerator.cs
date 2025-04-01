@@ -113,12 +113,13 @@ public static class ApiControllerGenerator
         var auth = meta.ActionAuthorizations.FirstOrDefault(a => a.Action == action);
         if (auth == null) return null;
 
-        if (!string.IsNullOrWhiteSpace(auth.Role))
-            return $"[Authorize(Roles = \"{auth.Role}\")]";
-
         if (!string.IsNullOrWhiteSpace(auth.Policy))
             return $"[Authorize(Policy = \"{auth.Policy}\")]";
 
-        return "[Authorize]";
+        if (auth.Roles.Length == 0)
+            return "[Authorize]";
+
+        var rolesJoined = string.Join(",", auth.Roles);
+        return $"[Authorize(Roles = \"{rolesJoined}\")]";
     }
 }
