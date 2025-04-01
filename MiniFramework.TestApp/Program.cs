@@ -11,7 +11,7 @@ using MiniFramework.Core.CodeGen;
 var assembly = Assembly.GetExecutingAssembly();
 var entityTypes = EntityDiscovery.FindAllEntities(assembly);
 
-
+var apiNamespace = "MyApp.Api";
 var repoNamespace = "MyApp.Repositories";
 var modelNamespace = "MiniFramework.TestApp";
 var usings = new[] { modelNamespace, "MiniFramework.Core.Interfaces", "MiniFramework.Core.Base" };
@@ -40,16 +40,23 @@ foreach (var type in entityTypes)
     CodeWriter.WriteToFile(folder, $"{metadata.Name}Repository.cs", classCode);
     CodeWriter.WriteToFile(folder, $"I{metadata.Name}Repository.cs", interfaceCode);
 
+     var controllerCode = ApiControllerGenerator.Generate(metadata, apiNamespace, usings);
+    CodeWriter.WriteToFile("Generated", $"{metadata.Name}Controller.cs", controllerCode);
+    Console.WriteLine($"✓ Vygenerován API kontroler: {metadata.Name}Controller.cs");
+
     Console.WriteLine($"✓ Vygenerováno: {metadata.Name}Repository.cs a I{metadata.Name}Repository.cs");
 }
 
-var diCode = DIRegistrationGenerator.Generate(
-    entityTypes.Select(EntityMetadataExtractor.Extract),
-    @namespace: "MyApp.DependencyInjection"
-);
+
+var entities = entityTypes.Select(EntityMetadataExtractor.Extract).ToList();
+var services = ServiceDiscovery.FindAllServices(Assembly.GetExecutingAssembly()).ToList();
+
+var diCode = DIRegistrationGenerator.GenerateWithServices(entities, services, "MyApp.DependencyInjection");
+
+
 
 CodeWriter.WriteToFile("Generated", "RepositoryRegistration.cs", diCode);
-Console.WriteLine("✓ Vygenerováno: RepositoryRegistration.cs");
+Console.WriteLine("✓ Vygenerováno: RepositoryRegistration.cs s repozitáři i službami");
 
 
 /*
