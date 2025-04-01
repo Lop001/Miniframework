@@ -1,4 +1,5 @@
 using System.Text;
+using MiniFramework.Core.Attributes;
 using MiniFramework.Core.Metadata;
 
 namespace MiniFramework.Core.CodeGen;
@@ -50,9 +51,15 @@ public static class ApiControllerGenerator
         sb.AppendLine("        }");
         sb.AppendLine();
 
+        var getAllAuth = GetAuthorizeLine(meta, CrudAction.GetAll);
+        if (getAllAuth != null) sb.AppendLine($"        {getAllAuth}");
+
         sb.AppendLine("        [HttpGet]");
         sb.AppendLine($"        public async Task<IEnumerable<{entityName}>> GetAll() => await _repository.GetAllAsync();");
         sb.AppendLine();
+
+        var getByIdAuth = GetAuthorizeLine(meta, CrudAction.GetById);
+        if (getByIdAuth != null) sb.AppendLine($"        {getByIdAuth}");
 
         sb.AppendLine("        [HttpGet(\"{id}\")]");
         sb.AppendLine($"        public async Task<ActionResult<{entityName}>> Get(int id)");
@@ -62,6 +69,9 @@ public static class ApiControllerGenerator
         sb.AppendLine("        }");
         sb.AppendLine();
 
+        var createAuth = GetAuthorizeLine(meta, CrudAction.Create);
+        if (createAuth != null) sb.AppendLine($"        {createAuth}");
+
         sb.AppendLine("        [HttpPost]");
         sb.AppendLine($"        public async Task<IActionResult> Create({entityName} entity)");
         sb.AppendLine("        {");
@@ -69,6 +79,9 @@ public static class ApiControllerGenerator
         sb.AppendLine("            return Ok();");
         sb.AppendLine("        }");
         sb.AppendLine();
+
+        var updateAuth = GetAuthorizeLine(meta, CrudAction.Update);
+        if (updateAuth != null) sb.AppendLine($"        {updateAuth}");
 
         sb.AppendLine("        [HttpPut(\"{id}\")]");
         sb.AppendLine($"        public async Task<IActionResult> Update(int id, {entityName} entity)");
@@ -78,6 +91,9 @@ public static class ApiControllerGenerator
         sb.AppendLine("            return Ok();");
         sb.AppendLine("        }");
         sb.AppendLine();
+
+        var deleteAuth = GetAuthorizeLine(meta, CrudAction.Delete);
+        if (deleteAuth != null) sb.AppendLine($"        {deleteAuth}");
 
         sb.AppendLine("        [HttpDelete(\"{id}\")]");
         sb.AppendLine("        public async Task<IActionResult> Delete(int id)");
@@ -90,5 +106,19 @@ public static class ApiControllerGenerator
         sb.AppendLine("}");
 
         return sb.ToString();
+    }
+
+    private static string? GetAuthorizeLine(EntityMetadata meta, CrudAction action)
+    {
+        var auth = meta.ActionAuthorizations.FirstOrDefault(a => a.Action == action);
+        if (auth == null) return null;
+
+        if (!string.IsNullOrWhiteSpace(auth.Role))
+            return $"[Authorize(Roles = \"{auth.Role}\")]";
+
+        if (!string.IsNullOrWhiteSpace(auth.Policy))
+            return $"[Authorize(Policy = \"{auth.Policy}\")]";
+
+        return "[Authorize]";
     }
 }

@@ -25,7 +25,8 @@ public static class EntityMetadataExtractor
             IsReadOnly = repoAttr?.ReadOnly ?? false,
             RegisterService = repoAttr?.RegisterService ?? true,
             ServiceLifetime = repoAttr?.Lifetime ?? ServiceLifetimeOption.Scoped,
-            AuthorizeAttributes = type.GetCustomAttributes<AuthorizeAccessAttribute>().ToList()
+            AuthorizeAttributes = type.GetCustomAttributes<AuthorizeAccessAttribute>().ToList(),
+            ActionAuthorizations = type.GetCustomAttributes<AuthorizeActionAttribute>().ToList()
 
         };
 

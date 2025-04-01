@@ -17,5 +17,6 @@ public class EntityMetadata
     public bool RegisterService { get; set; } = true;
     public ServiceLifetimeOption ServiceLifetime { get; set; } = ServiceLifetimeOption.Scoped;
     public List<AuthorizeAccessAttribute> AuthorizeAttributes { get; set; } = new();
+    public List<AuthorizeActionAttribute> ActionAuthorizations { get; set; } = new();
 
 }
