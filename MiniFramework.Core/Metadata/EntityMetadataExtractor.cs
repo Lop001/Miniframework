@@ -24,7 +24,9 @@ public static class EntityMetadataExtractor
             GenerateRepository = repoAttr?.Generate ?? true,
             IsReadOnly = repoAttr?.ReadOnly ?? false,
             RegisterService = repoAttr?.RegisterService ?? true,
-            ServiceLifetime = repoAttr?.Lifetime ?? ServiceLifetimeOption.Scoped
+            ServiceLifetime = repoAttr?.Lifetime ?? ServiceLifetimeOption.Scoped,
+            AuthorizeAttributes = type.GetCustomAttributes<AuthorizeAccessAttribute>().ToList()
+
         };
 
         

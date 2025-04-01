@@ -3,6 +3,7 @@ using MiniFramework.Core.Attributes;
 namespace MiniFramework.TestApp;
 
 [Entity(DisplayName = "Zákazník", TableName ="Customers")]
+[AuthorizeAccess(role: "Admin")]
 public class Customer
 {
     [PrimaryKey]

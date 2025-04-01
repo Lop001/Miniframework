@@ -25,6 +25,19 @@ public static class ApiControllerGenerator
         sb.AppendLine();
         sb.AppendLine($"namespace {@namespace}");
         sb.AppendLine("{");
+
+        if (meta.AuthorizeAttributes.Any())
+        {
+            foreach (var auth in meta.AuthorizeAttributes)
+            {
+                if (auth.Role != null)
+                    sb.AppendLine($"    [Authorize(Roles = \"{auth.Role}\")]");
+                else if (auth.Policy != null)
+                    sb.AppendLine($"    [Authorize(Policy = \"{auth.Policy}\")]");
+                else
+                    sb.AppendLine("    [Authorize]");
+            }
+    }
         sb.AppendLine("    [ApiController]");
         sb.AppendLine($"    [Route(\"api/{route}\")]");
         sb.AppendLine($"    public partial class {controllerName} : ControllerBase");
