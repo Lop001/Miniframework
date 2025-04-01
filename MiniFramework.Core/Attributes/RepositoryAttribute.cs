@@ -1,14 +1,6 @@
 namespace MiniFramework.Core.Attributes;
 
 
-public enum ServiceLifetimeOption
-{
-    Scoped,
-    Singleton,
-    Transient
-}
-
-
 [AttributeUsage(AttributeTargets.Class)]
 public class RepositoryAttribute : Attribute
 {

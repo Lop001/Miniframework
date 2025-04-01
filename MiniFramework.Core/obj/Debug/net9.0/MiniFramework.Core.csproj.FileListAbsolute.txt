@@ -10,3 +10,4 @@ C:\devel\Miniframework\MiniFramework.Core\obj\Debug\net9.0\refint\MiniFramework.
 C:\devel\Miniframework\MiniFramework.Core\obj\Debug\net9.0\MiniFramework.Core.pdb
 C:\devel\Miniframework\MiniFramework.Core\obj\Debug\net9.0\ref\MiniFramework.Core.dll
 C:\devel\Miniframework\MiniFramework.Core\obj\Debug\net9.0\MiniFramework.Core.csproj.AssemblyReference.cache
+C:\devel\Miniframework\MiniFramework.Core\obj\Debug\net9.0\MiniFramework.Core.sourcelink.json

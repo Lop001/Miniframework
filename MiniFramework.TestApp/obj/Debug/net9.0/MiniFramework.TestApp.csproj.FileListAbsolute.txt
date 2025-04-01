@@ -17,3 +17,4 @@ C:\devel\Miniframework\MiniFramework.TestApp\obj\Debug\net9.0\MiniFramework.Test
 C:\devel\Miniframework\MiniFramework.TestApp\obj\Debug\net9.0\MiniFramework.TestApp.genruntimeconfig.cache
 C:\devel\Miniframework\MiniFramework.TestApp\obj\Debug\net9.0\ref\MiniFramework.TestApp.dll
 C:\devel\Miniframework\MiniFramework.TestApp\bin\Debug\net9.0\Dapper.dll
+C:\devel\Miniframework\MiniFramework.TestApp\obj\Debug\net9.0\MiniFramework.TestApp.sourcelink.json

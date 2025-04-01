@@ -1,4 +1,5 @@
 using MiniFramework.Core.Attributes;
+using MiniFramework.Core;
 
 namespace MiniFramework.TestApp;
 [Entity(displayName: "Objednávka", tableName: "Orders")]

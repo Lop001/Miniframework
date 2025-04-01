@@ -1,6 +1,6 @@
 using System.Text;
 using MiniFramework.Core.Metadata;
-using MiniFramework.Core.Attributes;
+using MiniFramework.Core;
 
 namespace MiniFramework.CodeGen;
 
